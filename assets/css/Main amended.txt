@@ -1,0 +1,10 @@
+table {
+	margin: 0 0 2em 0;
+	width: 75	%; <-- Amended from 100% to 75%
+}
+	table tbody tr {
+		border: solid 1px rgba(210, 215, 217, 0.75);
+		border-left: 0;
+		border-right: 0;
+		color: #f56a6a; <--- Added this
+	}

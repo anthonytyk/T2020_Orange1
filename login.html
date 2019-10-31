@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Expense Tracking App</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		
+	</head>
+	<body class="is-preload login">
+		<!-- Wrapper -->
+			<div id="wrapper">
+				<!-- Main -->
+					<div id="main">
+						<!-- Login Page -->
+						<div class="inner">
+								<div class="appcenter"><img style="width: 80%; height:80%; opacity: 90%;" src="./images/logo.png" /></div>
+								<br>
+							<input type="text" id="username" placeholder="Username" /> <!-- TODO: GUID as username to initialise their GPX map data -->
+							<br>
+							<input type="password" id="password" placeholder="Password" />
+							<a href="forgetpw.html">Forget Password</a>
+							<br><br>
+							<div style= "align-content: center;"><a class="button big" onclick="login()">Login</a></div>
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+			<script>
+				
+				function login() {
+				var username = document.getElementById('username').value;
+				var password = document.getElementById('password').value;
+				
+				var userObj = {"user": username, "password": password}
+
+					$.ajax({
+						url: 'https://techtrek-257514.appspot.com/login',    //Your api url
+						type: 'POST',   //type is any HTTP method
+						contentType: 'application/json; charset=utf-8',
+						dataType: 'json',
+						data: JSON.stringify(userObj),     //Data as js object
+						success: function(data){
+							var obj = JSON.stringify(data);
+							var hash = data['hash'];
+            				localStorage.setItem("token", hash);
+							localStorage.setItem("username", username);
+							window.location.href='expenses.html';
+						},
+						error: function(){
+							alert('Incorrect Username/Password, please try again');
+						}
+					})
+				}
+			</script>
+	</body>
+</html>

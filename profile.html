@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Expense Tracking App - Profile</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <br>
+            <h1>Profile</h1>
+            <h3 id="gender">Name: $gender$</h3>
+            <h3 id="firstName">Name: $firstName$</h3>
+            <h3 id="lastName">Name: $lastName$</h3>
+            <h3 id="dateOfBirth">Name: $dateOfBirth$</h3>
+            <h3 id="lastLogIn">Name: $lastLogIn$</h3>
+            </div>
+    </div>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+            <nav id="menu">
+                    <header class="major">
+                            <h2 id="title" onclick="goProfile()">Welcome, $username$	</h2>
+                        </header>
+                        <script>
+                                function goProfile() {
+                                    location.href="profile.html";
+                                }
+                            </script>
+                <ul>
+                    <li><a href="expenses.html">Expenses</a></li>
+                    <li><a href="chatbot.html">Chatbot</a></li>
+                </ul>
+            </nav>
+            <footer id="footer">
+                <div><a href="index.html" class="button big">Log Out</a></div>
+                <br>
+                <p class="copyright">Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+            </footer>
+
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+    var username = localStorage.getItem("username");
+    
+	document.getElementById('title').innerHTML = "Welcome, " +username;
+
+    $( document ).ready(function() {
+        var token = localStorage.getItem("token");
+        var tokenObj = {"token": token}
+
+        var url = "http://techtrek-api-gateway.ap-southeast-1.elasticbeanstalk.com/customers/" + username
+        $.ajax({
+        headers: {
+            "Content-Type": "application/json",
+            "identity": "Group10",
+            "token": "aa9a045b-4279-4d49-b099-d322a2eaecac"
+        },
+        url: url,    //Your api url
+        type: 'GET',   //type is any HTTP method
+        success: function(data){
+            var obj = JSON.stringify(data);
+            var userid = data['customerId'];
+            localStorage.setItem("customerId", userid);
+        },
+        error: function(Error){
+            alert(JSON.stringify(Error));
+        }
+    })
+
+    var userid = localStorage.getItem("customerId");
+    var url2 = "http://techtrek-api-gateway.ap-southeast-1.elasticbeanstalk.com/customers/" + userid + "/details"
+
+    $.ajax({
+        headers: {
+            "Content-Type": "application/json",
+            "identity": "Group10",
+            "token": "aa9a045b-4279-4d49-b099-d322a2eaecac"
+        },
+        url: url2,    //Your api url
+        type: 'GET',   //type is any HTTP method
+        success: function(data){
+            localStorage.setItem("gender", data['gender']);
+            localStorage.setItem("firstName", data['firstName']);
+            localStorage.setItem("lastName", data['lastName']);
+            localStorage.setItem("dateOfBirth", data['dateOfBirth']);
+            localStorage.setItem("lastLogIn", data['lastLogIn']);
+        },
+        error: function(Error){
+            alert(JSON.stringify(Error));
+        }
+    })
+
+    var gender = localStorage.getItem("gender");
+    document.getElementById('gender').innerHTML = "<b>Gender: </b>" + gender;
+
+    var firstName = localStorage.getItem("firstName");
+    document.getElementById('firstName').innerHTML = "<b>First Name: </b>" + firstName;
+
+    var lastName = localStorage.getItem("lastName");
+    document.getElementById('lastName').innerHTML = "<b>Last Name: </b>" + lastName;
+
+    var dateOfBirth = localStorage.getItem("dateOfBirth");
+    document.getElementById('dateOfBirth').innerHTML = "<b>Date of Birth: </b>" + dateOfBirth;
+
+    var lastLogIn = localStorage.getItem("lastLogIn");
+    document.getElementById('lastLogIn').innerHTML = "<b>Last Login: </b>" + lastLogIn;
+
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Expense Tracking App - Overview</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+  
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+  
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+
+            var month = document.getElementById('month').value;
+        var year = document.getElementById('year').value;
+        var customerId = localStorage.getItem("customerId");
+        
+        var objsend = {"year": "2019","month": "1","id": customerId}
+    
+    $.ajax({
+        url: "https://techtrek-257514.appspot.com/monthlybreakdown",    //Your api url
+        type: 'POST',   //type is any HTTP method
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify(objsend),
+        success: function(data){
+            var obj = JSON.stringify(data);
+            var d1 = data['F&B'];
+            var d2 = data['TRANSPORT'];
+            var d3 = data['ATM'];
+            var d4 = data['TRANSFER'];
+            localStorage.setItem("F&B", d1);
+            localStorage.setItem("TRANSPORT", d2);
+            localStorage.setItem("ATM", d3);
+			localStorage.setItem("TRANSFER", d4);
+        },  
+        error: function(Error){
+            alert(JSON.stringify(Error));
+        }
+        })
+          // Create the data table.
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Topping');
+          data.addColumn('number', 'Slices');
+          data.addRows([
+            ['F&B', 143.78],
+            ['Transport', 39.38],
+            ['ATM', 250],
+            ['Transfer', 152.78],
+          ]);
+  
+          // Set chart options
+          var options = {
+                         'width':400,
+                         'height':300};
+  
+          // Instantiate and draw our chart, passing in some options.
+          var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+          chart.draw(data, options);
+        }
+      </script>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <br>
+            <h1>Overview</h1>
+            <div id="chart_div"></div>
+            <h1>Spending Trend</h1>
+            <img style="width: 90%; height:90%; " src="images/graph.jpg">
+            <div class="inner">
+                    <h2>Transaction Records</h2>
+                    <select id="month">
+                            <option value="1">Janurary</option>
+                            <option value="2">Februrary</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                          </select>
+                        <br>
+                          <select id="year">
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                            </select>
+                          <br>
+                    <div style= "align-content: center;"><a class="button big" onclick="generateTable()">Search</a></div>
+                </div>
+            <br>
+
+            <table id="myTable" lign="center">
+                </table>
+            </div>
+    </div>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+            <nav id="menu">  
+                <header class="major">
+                    <h2 id="title" onclick="goProfile()">Welcome, $username$	</h2>
+                </header>
+                <script>
+                        function goProfile() {
+                            location.href="profile.html";
+                        }
+                    </script>
+                <ul>
+                    <li><a href="expenses.html">Expenses</a></li>
+                    <li><a href="chatbot.html">Chatbot</a></li>
+                </ul>
+            </nav>
+            <footer id="footer">
+                <div><a href="index.html" class="button big">Log Out</a></div>
+                <br>
+                <p class="copyright">Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+            </footer>
+
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+        var month = document.getElementById('month').value;
+        var year = document.getElementById('year').value;
+        var customerId = localStorage.getItem("customerId");
+        
+        var objsend = {"year": "2019","month": "1","id": customerId}
+    
+    $.ajax({
+        url: "https://techtrek-257514.appspot.com/monthlybreakdown",    //Your api url
+        type: 'POST',   //type is any HTTP method
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify(objsend),
+        success: function(data){
+        },  
+        error: function(Error){
+            alert(JSON.stringify(Error));
+        }
+        })
+
+	var username = localStorage.getItem("username");
+	document.getElementById('title').innerHTML = "Welcome, " +username;
+
+    var url = "http://techtrek-api-gateway.ap-southeast-1.elasticbeanstalk.com/customers/" + username
+        $.ajax({
+        headers: {
+            "Content-Type": "application/json",
+            "identity": "Group10",
+            "token": "aa9a045b-4279-4d49-b099-d322a2eaecac"
+        },
+        url: url,    //Your api url
+        type: 'GET',   //type is any HTTP method
+        success: function(data){
+            var obj = JSON.stringify(data);
+            var userid = data['customerId'];
+            localStorage.setItem("customerId", userid);
+        },
+        error: function(Error){
+            alert(JSON.stringify(Error));
+        }
+    })
+
+    function generateTable(){
+        var month = document.getElementById('month').value;
+        var year = document.getElementById('year').value;
+        var customerId = localStorage.getItem("customerId");
+        
+        var objsend = {
+        "year": year,
+        "month": month,
+        "id": customerId
+        }
+
+        $.ajax({
+        url: "https://techtrek-257514.appspot.com/transactions",    //Your api url
+        type: 'POST',   //type is any HTTP method
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify(objsend),
+        success: function(data){
+
+            jQuery.each(data, function(index, value) {
+                var row = table.insertRow(0);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(1);
+                var cell4 = row.insertCell(1);
+                cell1.innerHTML = value['date'];
+                cell2.innerHTML = value['amount'];
+                cell3.innerHTML = value['tag'];
+                cell4.innerHTML = value['type'];
+                
+        });
+        var row = table.insertRow(0);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(1);
+                var cell4 = row.insertCell(1);
+                cell1.innerHTML = "DATE"
+                cell2.innerHTML = "AMOUNT"
+                cell3.innerHTML = "TAG"
+                cell4.innerHTML = "TYPE"
+        },  
+        error: function(Error){
+            alert(JSON.stringify(Error));
+        }
+        })
+
+        var table = document.getElementById("myTable");
+
+    }
+    $( document ).ready(function() {
+
+    
+});
+
+
+</script>
+</body>
+</html>
